@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Strip output from Jupyter notebooks before committing
+*.ipynb filter=nbstripout
