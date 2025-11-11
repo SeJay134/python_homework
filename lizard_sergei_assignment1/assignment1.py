@@ -39,3 +39,41 @@ a conditional cascade, if/elif/elif/else. That's perfectly valid. But you might 
 the match-case Python statement instead. Look it up! It just improves code appearance.
 Again, as you complete each function, you run the test to see whether everything is correct.
 """
+def calc(num1, num2, value = "multiply"):
+    isinstance()
+    if value == "multiply":
+        return num1 * num2 # 30
+    elif value == "add":
+        return num1 + num2 # 11
+    elif value == "divide":
+        try:
+            result = num1 / num2
+        except ZeroDivisionError:
+            return "Error: Division by zero is not allowed."
+        else:
+            return result
+        
+    elif value == "int_divide":
+        try:
+            result = num1 // num2
+        except ZeroDivisionError:
+            return "Error: Division by zero is not allowed."
+        else:
+            return result
+        
+    elif value == "modulo": # 4
+        return num1 % num2
+    elif value == "subtract":
+        return num1 - num2 # 8.2
+    else:
+        return "You can't do it!"
+    
+print(calc(5, 6, value = "multiply")) # 30
+print(calc(5, 6, value = "add")) # 11
+print(calc(20, 5, value = "divide"))
+print(calc(12.6, 4.4, value = "subtract")) # 8.2
+print(calc(9, 5, value = "modulo")) # 4
+print(calc(10, 0, value = "divide")) # can't divide by 0
+print(calc("first", "second", value = "multiply")) # can't multiply words
+
+
