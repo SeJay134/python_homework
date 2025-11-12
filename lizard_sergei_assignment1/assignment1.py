@@ -40,7 +40,8 @@ the match-case Python statement instead. Look it up! It just improves code appea
 Again, as you complete each function, you run the test to see whether everything is correct.
 """
 def calc(num1, num2, value = "multiply"):
-    isinstance()
+    if not isinstance(num1, (int, float)) or not isinstance(num2, (int, float)):
+        return "You can't multiply those values!"
     if value == "multiply":
         return num1 * num2 # 30
     elif value == "add":
@@ -49,7 +50,7 @@ def calc(num1, num2, value = "multiply"):
         try:
             result = num1 / num2
         except ZeroDivisionError:
-            return "Error: Division by zero is not allowed."
+            return "You can't divide by 0!"
         else:
             return result
         
@@ -57,7 +58,7 @@ def calc(num1, num2, value = "multiply"):
         try:
             result = num1 // num2
         except ZeroDivisionError:
-            return "Error: Division by zero is not allowed."
+            return "You can't divide by 0!"
         else:
             return result
         
@@ -76,4 +77,36 @@ print(calc(9, 5, value = "modulo")) # 4
 print(calc(10, 0, value = "divide")) # can't divide by 0
 print(calc("first", "second", value = "multiply")) # can't multiply words
 
+"""
+Task 4: Data Type Conversion
+Create a function called data_type_conversion. It takes two parameters, the value and the name of 
+the data type requested, one of float, str, or int. Return the converted value.
+Error handling: The function might be called with a bad parameter. For example, the caller might 
+try to convert the string "nonsense" to a float. Catch the error that occurs in this case. If this error 
+occurs, return the string You can't convert {value} into a {type}., except you use the value and data 
+type that are passed as parameters -- so again you use a formatted string.
+"""
+def data_type_conversion(value, data_type): # float, str, int
+    if data_type == "int":
+        try:
+            return int(value)
+        except ValueError:
+            return f"You can't convert {value} into a {data_type}."
+    elif data_type == "float":
+        try:
+            return float(value)
+        except ValueError:
+            return f"You can't convert {value} into a {data_type}."
+    elif data_type == "str":
+        try:
+            return str(value)
+        except ValueError:
+            return f"You can't convert {value} into a {data_type}."
+        
+print(data_type_conversion("110", "int"))
+print(data_type_conversion("5.5", "float"))
+print(data_type_conversion(7,"float"))
+print(data_type_conversion(91.1,"str"))
+print(data_type_conversion("banana", "int")) # "You can't convert banana into a int."
+    
 
