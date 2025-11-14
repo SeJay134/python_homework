@@ -224,3 +224,64 @@ def titleize(stringi):
 print(titleize("war and peace")) # "War and Peace"
 print(titleize("a separate peace")) # "A Separate Peace"
 print(titleize("after on")) # "After On"
+
+"""
+Task 9: Hangman, with more String Operations
+Create a function hangman. It takes two parameters, both strings, the secret and the guess.
+The secret is some word that the caller doesn't know. So the caller guesses various letters, 
+which are the ones in the guess string.
+A string is returned. Each letter in the returned string corresponds to a letter in the secret, 
+except any letters that are not in the guess string are replaced with an underscore. The others 
+are returned in place. Not everyone has played this kid's game, but it's common in the US.
+Example: Suppose the secret is "alphabet" and the guess is "ab". The returned string would be "a___ab__".
+Note that Python strings are immutable. That means that the following code would give an error:
+secret = "alphabet"
+secret[1] = "_"
+On the other hand, you can concatenate strings with the + operator.
+"""
+def hangman(secret, guess):
+    result = ""
+    for letter in secret:
+        if letter in guess:
+            result += letter
+        else:
+            result += "_"
+    return result
+print(hangman("difficulty","ic")) # "_i__ic____"
+
+"""
+Task 10: Pig Latin, Another String Manipulation Exercise
+Pig Latin is a kid's trick language. Each word is modified according to the following rules. 
+(1) If the string starts with a vowel (aeiou), "ay" is tacked onto the end. 
+(2) If the string starts with one or several consonants, they are moved to the end and "ay" is tacked 
+on after them. 
+(3) "qu" is a special case, as both of them get moved to the end of the word, 
+as if they were one consonant letter.
+Create a function called pig_latin. It takes an English string or sentence and converts it to Pig Latin, 
+returning the result. We will assume that there is no punctuation and that everything is lower case.
+"""
+def pig_latin(sentence):
+    vowels = "aeiou"
+    words = sentence.split()
+    result = []
+
+    for word in words:
+        if word[0] in vowels:
+            pig_word = word + "ay"
+        else:
+            for i, letter in enumerate(word):
+                if letter in vowels:
+                    if i > 0 and word[i-1] == "q" and word[i] == "u":
+                        i += 1
+                    pig_word = word[i:] + word[:i] + "ay"
+                    break
+        result.append(pig_word)
+
+    return " ".join(result)
+
+print(pig_latin("apple"))            # appleay
+print(pig_latin("banana"))           # ananabay
+print(pig_latin("cherry"))           # errychay
+print(pig_latin("quiet"))            # ietquay
+print(pig_latin("square"))           # aresquay
+print(pig_latin("the quick brown fox"))  # ethay ickquay ownbray oxfay
