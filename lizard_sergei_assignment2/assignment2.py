@@ -33,3 +33,11 @@ def column_index(name_column):
 employee_id_column = column_index('employee_id')
 
 # Task 4
+first_name_column = column_index('first_name')
+
+def first_name(row_number):
+    row = employees['rows'][row_number]
+    return row[first_name_column]
+
+print(first_name(0))
+print(first_name(1))
