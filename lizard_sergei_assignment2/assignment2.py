@@ -23,3 +23,13 @@ def read_employees():
 
 employees = read_employees()
 print(employees)
+
+# Task 3
+def column_index(name_column):
+    x = employees['fields'].index(name_column)
+    print(x)
+    return x
+
+employee_id_column = column_index('employee_id')
+
+# Task 4
