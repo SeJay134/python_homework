@@ -44,3 +44,14 @@ print(first_name(0))
 print(first_name(1))
 
 # Task 5
+def employee_find(employee_id):
+    def employee_match(row):
+        return int(row[employee_id_column]) == employee_id
+
+    matches = list(filter(employee_match, employees["rows"]))
+    return matches
+
+print(employee_find(1))
+print(employee_find(5))
+
+# Task 6
