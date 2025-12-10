@@ -74,11 +74,28 @@ print()
 print(clean_data["Age"].dtype)
 print()
 
-clean_data["Salary"] = clean_data["Salary"].str.strip()
-clean_data["Salary"] = clean_data["Salary"].replace(["unknown", "n/a"], np.nan)
+clean_data["Age"] = clean_data["Age"].astype(str).str.strip()
+clean_data["Age"] = clean_data["Age"].replace(["NaN", "n/a", "unknown", ""], np.nan)
+clean_data["Age"] = pd.to_numeric(clean_data["Age"], errors="coerce")
+
+clean_data["Salary"] = clean_data["Salary"].astype(str).str.strip()
+clean_data["Salary"] = clean_data["Salary"].replace(["unknown", "n/a", ""], np.nan)
 clean_data["Salary"] = pd.to_numeric(clean_data["Salary"], errors="coerce")
 
 print(clean_data["Age"].dtype)
+print(clean_data)
 print()
 
+clean_data["Age"] = clean_data["Age"].fillna(clean_data["Age"].mean())
+clean_data["Salary"] = clean_data["Salary"].fillna(clean_data["Salary"].median())
+print(clean_data)
+print()
+
+clean_data["Hire Date"] = pd.to_datetime(clean_data["Hire Date"],  errors="coerce")
+clean_data["Hire Date"] = clean_data["Hire Date"].fillna(clean_data["Hire Date"].median())
+print(clean_data)
+print()
+
+clean_data["Name"] = clean_data["Name"].astype(str).str.strip().str.upper()
+clean_data["Department"] = clean_data["Department"].astype(str).str.strip().str.upper()
 print(clean_data)
