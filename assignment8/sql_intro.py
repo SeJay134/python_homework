@@ -121,7 +121,30 @@ try:
         subscriptions_add(cursor, "Charlie", "Science Today", "2026-06-01")
 
         conn.commit()
+        print()
 
+# All subscribers
+        cursor.execute("SELECT * FROM subscribers")
+        rows = cursor.fetchall()
+        for row in rows:
+            print(row)
+        print()
+
+# all magazines sorted by name
+        cursor.execute("SELECT * FROM magazines ORDER BY name")
+        rows = cursor.fetchall()
+        for row in rows:
+            print(row)
+        print()
+
+# magazines for a particular publisher
+        publisher_name = "Computer Science"
+        cursor.execute("SELECT magazines.name FROM magazines JOIN publishers ON magazines.publisher_id = publishers.publishers_id WHERE publishers.name = ?", (publisher_name,))
+        rows = cursor.fetchall()
+        for row in rows:
+            print(row)
+        print()
+        
         print("Tables created successfully.")
 except sqlite3.Error as e:
     print("An error occurred:", e)
