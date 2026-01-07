@@ -1,54 +1,71 @@
 import sqlite3 
 
+# publishers
 def publishers_add(cursor, name):
     try:
         cursor.execute("INSERT INTO publishers (name) VALUES (?)", (name,) )
     except sqlite3.IntegrityError:
         print(f"{name} is already in the database.")
 
+# magazines
 def magazines_add(cursor, name, publisher_id):
     try:
         cursor.execute("INSERT INTO magazines (name, publisher_id) VALUES (?,?)", (name, publisher_id) )
     except sqlite3.IntegrityError:
         print(f"{name} is already in the database.")
 
+# subscribers
 def subscribers_add(cursor, name, address):
+    cursor.execute(
+        "SELECT * FROM subscribers WHERE name = ? AND address = ?",
+        (name, address)
+    )
+
+    if cursor.fetchall():
+        print("Subscriber already exists.")
+        return
+
+    cursor.execute(
+        "INSERT INTO subscribers (name, address) VALUES (?, ?)",
+        (name, address)
+    )
+
+# subscriptions
+def subscriptions_add(cursor, subscriber_name, magazine_name, expiration_date):
     try:
-        cursor.execute("INSERT INTO subscribers (name, address) VALUES (?,?)", (name, address) )
-    except sqlite3.IntegrityError:
-        print(f"{name} is already in the database.")
-
-def subscriptions_add(cursor, subscriber_id, magazines_id, expiration_date):
-    try:
-        cursor.execute("SELECT * FROM subscribers WHERE name = ?", (subscriber_id))
-        results = cursor.fetchall()
-        if len(results) > 0:
-            subscriber_id = results[0][0]
-        else:
-            print(f"There was no subscriber named {subscriber_id}.")
+        # subscriber_id
+        cursor.execute("SELECT subscribers_id FROM subscribers WHERE name = ?", (subscriber_name,))
+        result = cursor.fetchall()
+        if len(result) == 0:
+            print(f"There was no subscriber named {subscriber_name}.")
             return
-        
-        cursor.execute("SELECT * FROM magazines WHERE name = ?", (magazines_id))
-        results = cursor.fetchall()
-        if len(results) > 0:
-            magazines_id = results[0][0]
-        else:
-            print(f"There was no magazine named {magazines_id}.")
+        subscriber_id = result[0][0]
+
+        # magazines_id
+        cursor.execute("SELECT magazines_id FROM magazines WHERE name = ?", (magazine_name,))
+        result = cursor.fetchall()
+        if len(result) == 0:
+            print(f"There was no magazine named {magazine_name}.")
             return
+        magazines_id = result[0][0]
 
-    try:   
-        cursor.execute("INSERT INTO subscriptions (expiration_date) VALUES (?)", (expiration_date,) )
-    except sqlite3.IntegrityError:
-        print(f"{expiration_date} is already in the database.")
+        cursor.execute(
+            """
+            INSERT INTO subscriptions (subscriber_id, magazines_id, expiration_date)
+            VALUES (?, ?, ?)
+            """,
+            (subscriber_id, magazines_id, expiration_date)
+        )
 
     except sqlite3.IntegrityError:
-        print(f"{name} is already in the database.")
+        print("This subscription already exists.")
 
 try:
     with sqlite3.connect("../db/magazines.db") as conn:
         conn.execute("PRAGMA foreign_keys = 1")
         cursor = conn.cursor()
 
+# publishers
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS publishers (
             publishers_id INTEGER PRIMARY KEY,
@@ -56,8 +73,7 @@ try:
         )
         """)
 
-        publishers_add(cursor, 'Computer Science')
-
+# magazines
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS magazines (
             magazines_id INTEGER PRIMARY KEY,
@@ -67,6 +83,7 @@ try:
         )
         """)
 
+# subscribers
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS subscribers (
             subscribers_id INTEGER PRIMARY KEY,
@@ -75,6 +92,7 @@ try:
         )
         """)
 
+# subscriptions
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS subscriptions (
             subscription_id INTEGER PRIMARY KEY,
@@ -85,6 +103,22 @@ try:
             FOREIGN KEY (magazines_id) REFERENCES magazines (magazines_id)
         )
         """)
+
+        publishers_add(cursor, 'Computer Science')
+        publishers_add(cursor, "Tech Press")
+        publishers_add(cursor, "Science World")
+
+        magazines_add(cursor, "AI Monthly", 1)
+        magazines_add(cursor, "Data Weekly", 1)
+        magazines_add(cursor, "Science Today", 2)
+
+        subscribers_add(cursor, "Alice", "NY")
+        subscribers_add(cursor, "Bob", "LA")
+        subscribers_add(cursor, "Charlie", "TX")
+
+        subscriptions_add(cursor, "Alice", "AI Monthly", "2026-01-01")
+        subscriptions_add(cursor, "Bob", "Data Weekly", "2025-12-31")
+        subscriptions_add(cursor, "Charlie", "Science Today", "2026-06-01")
 
         conn.commit()
 
