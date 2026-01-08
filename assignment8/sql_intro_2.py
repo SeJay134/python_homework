@@ -10,7 +10,7 @@ the product table. Hint: Your ON statement would be ON line_items.product_id = p
 """
 query = ("SELECT li.line_item_id, li.quantity, li.product_id, p.product_name, p.price FROM line_items li JOIN products p ON li.product_id = p.product_id")
 
-df = pd.read_sql_query(conn, query)
+df = pd.read_sql_query(query, conn)
 print(df.head())
 print()
 
@@ -25,8 +25,15 @@ and 'first' for the 'product_name'. Print out the first 5 lines of the resulting
 Run the program to see if it is correct so far.
 Sort the DataFrame by the product_name column.
 """
-sum_data = df.groupby('product_id').agg({'line_item_id': 'count', 'total column': 'sum', 'product_name': 'first'})
+sum_data = df.groupby('product_id').agg({'line_item_id': 'count', 'total': 'sum', 'product_name': 'first'})
+print(sum_data.head())
+print()
 
+sum_data = sum_data.sort_values('product_name')
+
+sum_data.to_csv('order_summary.csv', index = False)
+
+conn.close()
 
 
 
